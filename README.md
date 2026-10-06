@@ -1,147 +1,118 @@
-# 🤖 Chatbot com Python, FastAPI, Docker e OpenAI
+# Chatbot IA — FastAPI + Docker + OpenAI API
 
-Este projeto é uma API de chatbot desenvolvida em **Python** com **FastAPI**, utilizando a API da **OpenAI (GPT-3.5-turbo)** para gerar respostas inteligentes a mensagens recebidas. Toda a aplicação é containerizada com **Docker**, facilitando o deploy em qualquer ambiente.
+API de chatbot desenvolvida em **Python** com **FastAPI**, integrando a API da OpenAI para geração de respostas a mensagens enviadas por requisições HTTP.
 
----
+O foco do projeto é demonstrar como encapsular uma integração com um serviço externo de IA dentro de uma aplicação Back-End simples, modular e executável em container.
 
-## 📌 Funcionalidades
+## Stack
 
-- Envio de mensagens via requisição HTTP `POST`  
-- Respostas geradas dinamicamente por inteligência artificial  
-- Código limpo e modular  
-- Docker para execução em ambientes isolados  
-- Pronto para deploy em nuvem ou local  
+- Python 3.10+
+- FastAPI
+- Pydantic
+- OpenAI Python SDK
+- Uvicorn
+- Docker
 
----
+## Funcionalidades
 
-## 🧰 Tecnologias utilizadas
+- endpoint HTTP para envio de prompts
+- integração com a API da OpenAI
+- validação da entrada com Pydantic
+- separação entre camada HTTP e lógica de integração
+- execução com Uvicorn
+- containerização com Docker
 
-- Python 3.10+  
-- FastAPI  
-- OpenAI Python SDK (>= 1.0)  
-- Uvicorn (servidor ASGI)  
-- Docker  
+## Estrutura
 
----
-
-## 🚀 Como executar o projeto
-
-### 1. Clone o repositório
-
-```bash
-git clone https://github.com/seu-usuario/chatbot-ia.git
-cd chatbot-ia
+```text
+chatbot_ia/
+├── app/
+│   └── chatbot.py
+├── Dockerfile
+├── main.py
+├── requirements.txt
+└── README.md
 ```
 
-### 2. Configure a chave da API da OpenAI
+## Endpoint
 
-Crie uma conta em:  
-https://platform.openai.com/account/api-keys
+### `POST /chat`
 
-Depois, crie um arquivo `.env` no diretório raiz com o seguinte conteúdo:
+Requisição:
 
+```json
+{
+  "prompt": "Olá, tudo bem?"
+}
 ```
+
+Resposta:
+
+```json
+{
+  "response": "Resposta gerada pelo modelo configurado na aplicação."
+}
+```
+
+## Configuração
+
+A integração utiliza a variável de ambiente:
+
+```text
+OPENAI_API_KEY
+```
+
+Crie um arquivo `.env`:
+
+```env
 OPENAI_API_KEY=sua-chave-aqui
 ```
 
-Substitua `sua-chave-aqui` pela sua chave real.
+> Nunca publique sua chave de API no repositório.
 
----
+## Execução com Docker
 
-### 3. Construa a imagem Docker
-
-Com o Docker instalado e rodando, execute:
+### Build
 
 ```bash
-docker build -t chatbot-ia .
+docker build -t chatbot-ia ./chatbot_ia
 ```
 
----
-
-### 4. Execute o container
+### Execução
 
 ```bash
 docker run -p 8000:8000 --env-file .env chatbot-ia
 ```
 
-A API estará disponível em:  
+A API ficará disponível em:
+
+```text
 http://localhost:8000
-
----
-
-## 📡 Como testar a API
-
-### Endpoint: `POST /chat`
-
-**Requisição:**
-
-```json
-{
-  "prompt": "Olá, tudo bem?"
-}
 ```
 
-**Resposta esperada:**
-
-```json
-{
-  "response": "Olá! Estou aqui para te ajudar. Em que posso ser útil hoje?"
-}
-```
-
----
-
-## 🔬 Exemplos de testes
-
-### Usando `curl`:
+## Teste com curl
 
 ```bash
-curl -X POST http://localhost:8000/chat   -H "Content-Type: application/json"   -d "{"prompt":"Olá, tudo bem?"}"
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"Olá, tudo bem?"}'
 ```
 
-### Usando Postman ou Insomnia:
+## O que este projeto demonstra
 
-- Método: `POST`  
-- URL: `http://localhost:8000/chat`  
-- Body (raw JSON):
+- desenvolvimento de API com FastAPI
+- integração entre serviços
+- consumo de API externa
+- validação de dados
+- organização modular
+- uso de variáveis de ambiente
+- containerização com Docker
 
-```json
-{
-  "prompt": "Olá, tudo bem?"
-}
-```
+## Próximas evoluções
 
-
----
-
-## 📄 Dockerfile utilizado
-
-```Dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
----
-
-## 🧠 Sobre a API da OpenAI
-
-Este projeto utiliza o modelo **gpt-3.5-turbo** da OpenAI para gerar respostas inteligentes e contextuais.  
-Documentação oficial: https://platform.openai.com/docs
-
-
-## ✅ Melhorias futuras
-
-- [ ] Interface Web (ex: Streamlit ou React)  
-- [ ] Autenticação com JWT  
-- [ ] Registro de logs de conversas  
-- [ ] Limite de uso por IP ou chave  
-
----
+- autenticação
+- rate limiting
+- logs estruturados
+- persistência de histórico
+- testes automatizados
+- configuração externa do modelo utilizado
